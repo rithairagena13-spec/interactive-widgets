@@ -1,7 +1,9 @@
-import { useState } from 'react';
-
-export default function TaskBoard() {
-  const [tasks, setTasks] = useState([]);
+export default function TaskBoard({
+  tasks = [],
+  onAddTask,
+  onToggleTask,
+  onRemoveTask
+}) {
   const [taskInput, setTaskInput] = useState('');
 
   function handleAddTask(event) {
@@ -11,35 +13,16 @@ export default function TaskBoard() {
 
     if (!title) return;
 
-    const newTask = {
-      id: crypto.randomUUID(),
-      title,
-      completed: false
-    };
-
-    setTasks((previousTasks) => [...previousTasks, newTask]);
+    onAddTask(title);
     setTaskInput('');
-  }
-
-  function handleCompleteTask(taskId) {
-    setTasks((previousTasks) =>
-      previousTasks.map((task) =>
-        task.id === taskId
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    );
-  }
-
-  function handleRemoveTask(taskId) {
-    setTasks((previousTasks) =>
-      previousTasks.filter((task) => task.id !== taskId)
-    );
   }
 
   return (
     <div className="space-y-5">
-      <form onSubmit={handleAddTask} className="flex flex-col gap-3 sm:flex-row">
+      <form
+        onSubmit={handleAddTask}
+        className="flex flex-col gap-3 sm:flex-row"
+      >
         <input
           type="text"
           value={taskInput}
@@ -50,7 +33,7 @@ export default function TaskBoard() {
 
         <button
           type="submit"
-          className="rounded-xl bg-[#315F59] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1F302B]"
+          className="rounded-xl bg-[#315F59] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1F302B]"
         >
           + Add task
         </button>
@@ -58,9 +41,7 @@ export default function TaskBoard() {
 
       {tasks.length === 0 ? (
         <div className="rounded-2xl bg-[#F4F1E8] p-8 text-center">
-          <p className="font-semibold text-[#1F302B]">
-            No tasks yet
-          </p>
+          <p className="font-semibold text-[#1F302B]">No tasks yet</p>
           <p className="mt-2 text-sm text-[#737A72]">
             Add your first task to get started.
           </p>
@@ -76,25 +57,22 @@ export default function TaskBoard() {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => handleCompleteTask(task.id)}
+                  onChange={() => onToggleTask(task.id)}
                   className="h-4 w-4 accent-[#315F59]"
                 />
 
-                <span
-                  className={`break-words text-sm ${
-                    task.completed
-                      ? 'text-[#999E94] line-through'
-                      : 'font-medium text-[#1F302B]'
-                  }`}
-                >
+                <span className={task.completed
+                  ? 'break-words text-sm text-[#999E94] line-through'
+                  : 'break-words text-sm font-medium text-[#1F302B]'
+                }>
                   {task.title}
                 </span>
               </label>
 
               <button
                 type="button"
-                onClick={() => handleRemoveTask(task.id)}
-                className="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold text-[#C56F54] transition hover:bg-[#FBEDE7]"
+                onClick={() => onRemoveTask(task.id)}
+                className="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold text-[#C56F54] hover:bg-[#FBEDE7]"
               >
                 Remove
               </button>
