@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export default function TaskBoard({
   tasks = [],
   onAddTask,
@@ -33,7 +35,7 @@ export default function TaskBoard({
 
         <button
           type="submit"
-          className="rounded-xl bg-[#315F59] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1F302B]"
+          className="rounded-xl bg-[#315F59] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1F302B]"
         >
           + Add task
         </button>
@@ -41,7 +43,9 @@ export default function TaskBoard({
 
       {tasks.length === 0 ? (
         <div className="rounded-2xl bg-[#F4F1E8] p-8 text-center">
-          <p className="font-semibold text-[#1F302B]">No tasks yet</p>
+          <p className="font-semibold text-[#1F302B]">
+            No tasks yet
+          </p>
           <p className="mt-2 text-sm text-[#737A72]">
             Add your first task to get started.
           </p>
@@ -61,10 +65,13 @@ export default function TaskBoard({
                   className="h-4 w-4 accent-[#315F59]"
                 />
 
-                <span className={task.completed
-                  ? 'break-words text-sm text-[#999E94] line-through'
-                  : 'break-words text-sm font-medium text-[#1F302B]'
-                }>
+                <span
+                  className={`break-words text-sm ${
+                    task.completed
+                      ? 'text-[#999E94] line-through'
+                      : 'font-medium text-[#1F302B]'
+                  }`}
+                >
                   {task.title}
                 </span>
               </label>
@@ -72,7 +79,7 @@ export default function TaskBoard({
               <button
                 type="button"
                 onClick={() => onRemoveTask(task.id)}
-                className="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold text-[#C56F54] hover:bg-[#FBEDE7]"
+                className="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold text-[#C56F54] transition hover:bg-[#FBEDE7]"
               >
                 Remove
               </button>
